@@ -22,7 +22,4 @@ public class Config {
             log.info("Preloading " + repository.save(new Employee("Frodo Baggins", "thief")));
         };
     }
-
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {return builder.build();}
 }

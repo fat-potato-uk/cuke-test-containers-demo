@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, value = "/employees")
-class EmployeeController {
+public class EmployeeController {
 
     @Autowired
     private EmployeeManager employeeManager;

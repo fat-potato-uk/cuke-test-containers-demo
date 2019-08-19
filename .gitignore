@@ -1,4 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea
-/rest-demo-2.iml
+/*.iml
 /target/

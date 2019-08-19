@@ -1,9 +1,6 @@
 package demo.models;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,15 +9,15 @@ import javax.persistence.Id;
 @Data
 @Entity
 @NoArgsConstructor
-
+@RequiredArgsConstructor
+@EqualsAndHashCode(exclude = {"id", "salary"})
 public class Employee {
-
-    private @Id @GeneratedValue Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
+    @NonNull
     private String name;
+    @NonNull
     private String role;
-
-    public Employee(String name, String role) {
-        this.name = name;
-        this.role = role;
-    }
+    private Long salary;
 }

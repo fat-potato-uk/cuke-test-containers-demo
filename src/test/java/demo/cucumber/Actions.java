@@ -1,50 +1,43 @@
 package demo.cucumber;
 
-import demo.controllers.EmployeeController;
-import demo.controllers.advice.EmployeeControllerAdvice;
-import demo.repositories.EmployeeRepository;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
+import org.testcontainers.containers.GenericContainer;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static java.lang.String.format;
 
 @Service
-public class Actions {
+class Actions {
+
+    @Value("${test.container.name}")
+    private String testContainerName;
 
     @Autowired
-    private EmployeeController employeeController;
+    private RestTemplate restTemplate;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private GenericContainer container;
 
-    @Autowired
-    private EmployeeControllerAdvice employeeControllerAdvice;
+    private ResponseEntity<ArrayNode> result;
 
-    // Result actions to be passed between steps.
-    private static ResultActions resultActions = null;
-
-    private MockMvc mockMvc;
-
-    @PostConstruct
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(employeeController).setControllerAdvice(employeeControllerAdvice).build();
+    void executeGetJsonArray(String url) {
+        var fullAddress = format("http://%s:%s/%s", container.getContainerIpAddress(), container.getMappedPort(8080), url);
+        result = restTemplate.getForEntity(fullAddress, ArrayNode.class);
     }
 
-    void executeGet(String url) throws Exception {
-        resultActions = mockMvc.perform(get(url));
+    void startContainer() {
+        container = new GenericContainer(testContainerName).withExposedPorts(8080);
+        container.start();
     }
 
     int getHttpResponse() {
-        return resultActions.andReturn().getResponse().getStatus();
+        return result.getStatusCodeValue();
     }
 
-    String getEmployeeHttpResponseMessage() throws IOException {
-        return resultActions.andReturn().getResponse().getContentAsString();
+    ArrayNode getHttpResponseMessage() {
+        return result.getBody();
     }
 }

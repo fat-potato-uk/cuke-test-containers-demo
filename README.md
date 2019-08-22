@@ -1,7 +1,7 @@
 ### Challenge 10
 
 This tutorial looks to highlight a means of testing our application from an system/black box
-testing point of view. This means we are going to be testing the built artifact from
+testing point of view. To do this we are going to be testing the built artifact from
 the last tutorial (`employee-test` Docker image) through a similar set of `Cucumber` steps.
 
 The feature file looks exactly the same:
